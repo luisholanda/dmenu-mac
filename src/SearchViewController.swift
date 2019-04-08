@@ -9,9 +9,7 @@ import Cocoa
 let kDefaultsGlobalShortcutKeycode = "kDefaultsGlobalShortcutKeycode"
 let kDefaultsGlobalShortcutModifiedFlags = "kDefaultsGlobalShortcutModifiedFlags"
 
-class SearchViewController: NSViewController, NSTextFieldDelegate,
-    NSWindowDelegate, SettingsViewControllerDelegate {
-    
+class SearchViewController: NSViewController, NSTextFieldDelegate, NSWindowDelegate {
     @IBOutlet fileprivate var searchText: NSTextField!
     @IBOutlet fileprivate var resultsText: ResultsView!
     var settingsWindow = NSWindow()
@@ -266,21 +264,6 @@ class SearchViewController: NSViewController, NSTextFieldDelegate,
         return scoreDict.sorted(by: {$0.1 > $1.1}).map({$0.0})
     }
 
-    @IBAction func openSettings(_ sender: AnyObject) {
-        let sb = NSStoryboard(name: "Settings", bundle: Bundle.main)
-        let settingsView = sb.instantiateInitialController() as? SettingsViewController
-        settingsView?.delegate = self
-        
-        settingsWindow.contentViewController = settingsView
-        weak var wSettingsWindow = settingsWindow
-        
-        view.window?.beginSheet(settingsWindow,
-                                completionHandler: { (response) -> Void in
-                                    wSettingsWindow?.contentViewController = nil
-        })
-    }
-
-    
     func onSettingsApplied() {
         view.window?.endSheet(settingsWindow)
 
